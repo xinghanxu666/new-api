@@ -11,30 +11,33 @@ import (
 
 // disable & notify
 func DisableChannel(channelId int, channelName string, reason string) {
-	model.UpdateChannelStatusById(channelId, common.ChannelStatusAutoDisabled)
+	model.UpdateChannelStatusById(channelId, common.ChannelStatusAutoDisabled, reason)
 	subject := fmt.Sprintf("通道「%s」（#%d）已被禁用", channelName, channelId)
 	content := fmt.Sprintf("通道「%s」（#%d）已被禁用，原因：%s", channelName, channelId, reason)
 	notifyRootUser(subject, content)
 }
 
 func EnableChannel(channelId int, channelName string) {
-	model.UpdateChannelStatusById(channelId, common.ChannelStatusEnabled)
+	model.UpdateChannelStatusById(channelId, common.ChannelStatusEnabled, "")
 	subject := fmt.Sprintf("通道「%s」（#%d）已被启用", channelName, channelId)
 	content := fmt.Sprintf("通道「%s」（#%d）已被启用", channelName, channelId)
 	notifyRootUser(subject, content)
 }
 
-func ShouldDisableChannel(err *relaymodel.OpenAIError, statusCode int) bool {
+func ShouldDisableChannel(err *relaymodel.OpenAIErrorWithStatusCode) bool {
 	if !common.AutomaticDisableChannelEnabled {
 		return false
 	}
 	if err == nil {
 		return false
 	}
-	if statusCode == http.StatusUnauthorized {
+	if err.LocalError {
+		return false
+	}
+	if err.StatusCode == http.StatusUnauthorized || err.StatusCode == http.StatusForbidden {
 		return true
 	}
-	switch err.Code {
+	switch err.Error.Code {
 	case "invalid_api_key":
 		return true
 	case "account_deactivated":
@@ -42,7 +45,7 @@ func ShouldDisableChannel(err *relaymodel.OpenAIError, statusCode int) bool {
 	case "billing_not_active":
 		return true
 	}
-	switch err.Type {
+	switch err.Error.Type {
 	case "insufficient_quota":
 		return true
 	// https://docs.anthropic.com/claude/reference/errors
@@ -53,11 +56,13 @@ func ShouldDisableChannel(err *relaymodel.OpenAIError, statusCode int) bool {
 	case "forbidden":
 		return true
 	}
-	if strings.HasPrefix(err.Message, "Your credit balance is too low") { // anthropic
+	if strings.HasPrefix(err.Error.Message, "Your credit balance is too low") { // anthropic
 		return true
-	} else if strings.HasPrefix(err.Message, "This organization has been disabled.") {
+	} else if strings.HasPrefix(err.Error.Message, "This organization has been disabled.") {
 		return true
-	} else if strings.HasPrefix(err.Message, "You exceeded your current quota") {
+	} else if strings.HasPrefix(err.Error.Message, "You exceeded your current quota") {
+		return true
+	} else if strings.HasPrefix(err.Error.Message, "Permission denied") {
 		return true
 	}
 	return false
