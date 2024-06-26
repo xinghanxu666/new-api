@@ -12,6 +12,8 @@
 
 > [!NOTE]
 > 最新版Docker镜像 registry.cn-beijing.aliyuncs.com/xinghanxu/tx-api 
+>
+>
 > 更新指令 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower -cR
 
 ## 主要变更
