@@ -11,7 +11,8 @@
 > 根据[《生成式人工智能服务管理暂行办法》](http://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm)的要求，请勿对中国地区公众提供一切未经备案的生成式人工智能服务。
 
 > [!NOTE]
-> 最新版Docker镜像 registry.cn-beijing.aliyuncs.com/xinghanxu/tx-api 
+> 最新版Docker镜像
+>registry.cn-beijing.aliyuncs.com/xinghanxu/tx-api:latest 
 >
 >
 > 更新指令 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower -cR
@@ -92,19 +93,19 @@
 ### 基于 Docker 进行部署
 ```shell
 # 使用 SQLite 的部署命令：
-docker run --name new-api -d --restart always -p 3000:3000 -e TZ=Asia/Shanghai -v /home/ubuntu/data/new-api:/data calciumion/new-api:latest
+docker run --name new-api -d --restart always -p 3000:3000 -e TZ=Asia/Shanghai -v /home/ubuntu/data/new-api:/data registry.cn-beijing.aliyuncs.com/xinghanxu/tx-api:latest
 # 使用 MySQL 的部署命令，在上面的基础上添加 `-e SQL_DSN="root:123456@tcp(localhost:3306)/oneapi"`，请自行修改数据库连接参数。
 # 例如：
-docker run --name new-api -d --restart always -p 3000:3000 -e SQL_DSN="root:123456@tcp(localhost:3306)/oneapi" -e TZ=Asia/Shanghai -v /home/ubuntu/data/new-api:/data calciumion/new-api:latest
+docker run --name new-api -d --restart always -p 3000:3000 -e SQL_DSN="root:123456@tcp(localhost:3306)/oneapi" -e TZ=Asia/Shanghai -v /home/ubuntu/data/new-api:/data registry.cn-beijing.aliyuncs.com/xinghanxu/tx-api:latest
 ```
-### 使用宝塔面板Docker功能部署
+### 使用Docker功能部署
 ```shell
 # 使用 SQLite 的部署命令：
-docker run --name new-api -d --restart always -p 3000:3000 -e TZ=Asia/Shanghai -v /www/wwwroot/new-api:/data calciumion/new-api:latest
+docker run --name tx-api -d --restart always -p 3000:3000 -e TZ=Asia/Shanghai -v /www/wwwroot/new-api:/data registry.cn-beijing.aliyuncs.com/xinghanxu/tx-api:latest
 # 使用 MySQL 的部署命令，在上面的基础上添加 `-e SQL_DSN="root:123456@tcp(localhost:3306)/oneapi"`，请自行修改数据库连接参数。
 # 例如：
 # 注意：数据库要开启远程访问，并且只允许服务器IP访问
-docker run --name new-api -d --restart always -p 3000:3000 -e SQL_DSN="root:123456@tcp(宝塔的服务器地址:宝塔数据库端口)/宝塔数据库名称" -e TZ=Asia/Shanghai -v /www/wwwroot/new-api:/data calciumion/new-api:latest
+docker run --name tx-api -d --restart always -p 3000:3000 -e SQL_DSN="root:123456@tcp(服务器地址:数据库端口)/数据库名称" -e TZ=Asia/Shanghai -v /www/wwwroot/new-api:/data registry.cn-beijing.aliyuncs.com/xinghanxu/tx-api:latest
 # 注意：数据库要开启远程访问，并且只允许服务器IP访问
 ```
 ### 默认账号密码
@@ -116,30 +117,10 @@ docker run --name new-api -d --restart always -p 3000:3000 -e SQL_DSN="root:1234
 ## Suno接口设置文档
 [对接文档](Suno.md)
 
-## 交流群
-<img src="https://github.com/Calcium-Ion/new-api/assets/61247483/de536a8a-0161-47a7-a0a2-66ef6de81266" width="300">
-
-## 界面截图
-![image](https://github.com/Calcium-Ion/new-api/assets/61247483/ad0e7aae-0203-471c-9716-2d83768927d4)
-
-![image](https://github.com/Calcium-Ion/new-api/assets/61247483/d1ac216e-0804-4105-9fdc-66b35022d861)
-
-![image](https://github.com/Calcium-Ion/new-api/assets/61247483/3ca0b282-00ff-4c96-bf9d-e29ef615c605)  
-![image](https://github.com/Calcium-Ion/new-api/assets/61247483/f4f40ed4-8ccb-43d7-a580-90677827646d)  
-![image](https://github.com/Calcium-Ion/new-api/assets/61247483/90d7d763-6a77-4b36-9f76-2bb30f18583d)
-![image](https://github.com/Calcium-Ion/new-api/assets/61247483/e414228a-3c35-429a-b298-6451d76d9032)
-夜间模式  
-![image](https://github.com/Calcium-Ion/new-api/assets/61247483/1c66b593-bb9e-4757-9720-ff2759539242)
-
-![image](https://github.com/Calcium-Ion/new-api/assets/61247483/5b3228e8-2556-44f7-97d6-4f8d8ee6effa)  
-![image](https://github.com/Calcium-Ion/new-api/assets/61247483/af9a07ee-5101-4b3d-8bd9-ae21a4fd7e9e)
 
 ## 相关项目
 - [One API](https://github.com/songquanpeng/one-api)：原版项目
-- [Midjourney-Proxy](https://github.com/novicezk/midjourney-proxy)：Midjourney接口支持
-- [chatnio](https://github.com/Deeptrain-Community/chatnio)：下一代 AI 一站式 B/C 端解决方案
-- [neko-api-key-tool](https://github.com/Calcium-Ion/neko-api-key-tool)：用key查询使用额度
-
+-
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Calcium-Ion/new-api&type=Date)](https://star-history.com/#Calcium-Ion/new-api&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=xinghanxu6666/tx-api&type=Date)](https://star-history.com/#xinghsnxu6666/tx-api&Date)
